@@ -13,7 +13,20 @@ Henrique Jotten Mendonca de Souza, **RA:** 11045812
 
 ## Descrição do Projeto:
 
+**Solar System** é um projeto 3D baseado no projeto [LookAt](https://hbatagelo.github.io/abcgapps/lookat/index.html), esse programa tem como objetivo simular os planetas do sistema solar orbitando em volta do Sol. Entre algumas das funcionalidade está a de poder mover a camera no espaço através das teclas:
+
+### Movimentos da Camera:
+* <kbd>A</kbd> e <kbd>←</kbd>: Move a camera ao redor do eixo Y para a Esquerda.  
+* <kbd>D</kbd> e <kbd>→</kbd>: Move a camera ao redor do eixo Y para a Direita.  
+* <kbd>W</kbd> e <kbd>↑</kbd>: Move a camera no eixo Z para Frente.   
+* <kbd>S</kbd> e <kbd>↓</kbd>: Move a camera no eixo Z para Trás.  
+* <kbd>Q</kbd>: Move a camera no eixo X para a Esquerda.  
+* <kbd>E</kbd>: Move a camera no eixo X para a Direita.  
+
 ![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem.png?raw=true)
+
+Através dos Widgets presentes no topo da tela é possivel alternar entre os planetas do sistema solar, bem como alterar as propriedades de velocidade de orbita do planeta com o slider e retornar a camera para a posição inicial do programa.  
+
 ![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem-widgets.png?raw=true)
 
 ## Detalhamento do Código:
