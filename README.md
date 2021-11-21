@@ -1,7 +1,26 @@
-## Autores:
+# Autores:
 
 Matheus Augusto Correa de Oliveira, **RA:** 11201721710\
 Henrique Jotten Mendonca de Souza, **RA:** 11045812
+
+
+# Projeto 2
+
+## Links:
+
+[Código GitHub](https://github.com/Matheuzs/abcg)  
+[GitHub Pages](https://matheuzs.github.io/abcg/solarSystem/)
+
+## Descrição do Projeto:
+
+![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem.png?raw=true)
+![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem-widgets.png?raw=true)
+
+## Detalhamento do Código:
+
+
+
+# Projeto 1
 
 ## Links:
 
@@ -32,10 +51,3 @@ Em initializeGL(), carregamos as fontes que serão usadas nos textos e os shader
 
 * **pacmans.cpp / pacmans.hpp:** Implementa os comportamentos/atributos dos pacmans que caem do topo da tela, a classe gera os pacmans na posicao (aleatória, 1.5) de 3 em 3 segundos através da função generatePacmans().
 A geometria dos pacmans é gerada com 10 lados e utilizando GL_TRIANGLE_FAN.
-
-
-
-
-
-
-
