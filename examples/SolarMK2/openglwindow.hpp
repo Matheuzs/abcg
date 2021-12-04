@@ -66,7 +66,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   float m_shininess{};
 
   // Light and material properties
-  glm::vec4 moon_lightDir{-1.0f, -1.0f, -1.0f, 0.0f};
+  glm::vec4 moon_lightDir{1.0f, 0.0f, 0.0f, 0.0f};
   glm::vec4 moon_Ia{1.0f};
   glm::vec4 moon_Id{1.0f};
   glm::vec4 moon_Is{0.25f};

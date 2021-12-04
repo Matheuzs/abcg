@@ -416,11 +416,11 @@ void Model::standardizeMoon() {
   }
 
   // Center and scale
-
-  glm::vec3 correction(120,0,1);
+  glm::vec3 correction(12, 0, 1);
   const auto center{(min + max + correction) / 2.0f};
-  const auto scaling{2.0f / glm::length(max - min) / (13.5f * 2)};
+  const auto scaling{15.0f / glm::length(max - min) / (13.5f * 2)};
   for (auto& vertex : m_vertices) {
     vertex.position = (vertex.position - center) * scaling;
   }
+
 }

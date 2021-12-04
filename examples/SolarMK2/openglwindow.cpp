@@ -116,6 +116,7 @@ void OpenGLWindow::loadModel(std::string_view path) {
 }
 
 void OpenGLWindow::loadMoonModel(std::string_view path) {
+  
   std::string viewType = getViewType(m_typeIndex);
   moon_model.loadDiffuseTexture(getAssetsPath() + "maps/Moon.png");
   moon_model.loadNormalTexture(getAssetsPath() + "maps/MoonNormal.png");
