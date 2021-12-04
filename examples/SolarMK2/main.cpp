@@ -10,10 +10,10 @@ int main(int argc, char **argv) {
     auto window{std::make_unique<OpenGLWindow>()};
     window->setOpenGLSettings({.samples = 0, .vsync = true});
     window->setWindowSettings(
-        {.width = 600, .height = 600, .title = "Mini Earth"});
+        {.width = 600, .height = 600, .title = "SolarMK2"});
 
-    app.run(window);
-  } catch (abcg::Exception &exception) {
+    app.run(std::move(window));
+  } catch (const abcg::Exception &exception) {
     fmt::print(stderr, "{}\n", exception.what());
     return -1;
   }

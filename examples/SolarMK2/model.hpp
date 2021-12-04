@@ -4,6 +4,7 @@
 #include <string_view>
 
 #include "abcg.hpp"
+#include <vector>
 
 struct Vertex {
   glm::vec3 position{};
