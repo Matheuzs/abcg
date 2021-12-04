@@ -1,7 +1,51 @@
-## Autores:
+# Autores:
 
 Matheus Augusto Correa de Oliveira, **RA:** 11201721710\
 Henrique Jotten Mendonca de Souza, **RA:** 11045812
+
+
+# <Projeto 2> Solar System
+
+## Links:
+
+[Código GitHub](https://github.com/Matheuzs/abcg)  
+[GitHub Pages](https://matheuzs.github.io/abcg/solarSystem/)
+
+## Descrição do Projeto:
+
+*Solar System* é um projeto 3D baseado no projeto [LookAt](https://hbatagelo.github.io/abcgapps/lookat/index.html), esse programa tem como objetivo simular os planetas do sistema solar orbitando em volta do Sol. Entre algumas das funcionalidade está a de poder mover a camera no espaço através das teclas:
+
+### Movimentos da Camera:
+* <kbd>A</kbd> e <kbd>←</kbd>: Move a camera ao redor do eixo Y para a Esquerda.  
+* <kbd>D</kbd> e <kbd>→</kbd>: Move a camera ao redor do eixo Y para a Direita.  
+* <kbd>W</kbd> e <kbd>↑</kbd>: Move a camera no eixo Z para Frente.   
+* <kbd>S</kbd> e <kbd>↓</kbd>: Move a camera no eixo Z para Trás.  
+* <kbd>Q</kbd>: Move a camera no eixo X para a Esquerda.  
+* <kbd>E</kbd>: Move a camera no eixo X para a Direita.  
+
+![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem.png?raw=true)
+
+Através dos Widgets presentes no topo da tela é possivel alternar entre os planetas do sistema solar, bem como alterar as propriedades de velocidade de orbita do planeta com o slider e retornar a camera para a posição inicial do programa com o botão.  
+
+![alt text](https://github.com/Matheuzs/abcg/blob/master/images/solarsystem-widgets.png?raw=true)
+
+**OBS:** O projeto não segue as distancias e proporções reais do sistema solar. 
+
+## Detalhamento do Código:
+
+* **Assets/**: Pasta onde está centralizado os shaders, aqui também está o modelo utilizado para os planetas (sphere.obj).
+
+* **camera.hpp / camera.cpp**: Classe que possui todos os movimentos de camera, também é aqui onde definimos a ViewMatrix e ProjectionMatrix, posição inicial da camera e para onde ela estará apontando sua visão.
+
+* **main.cpp:** Nela utilizamos o abcg e definimos algumas configurções como o tamanho da tela (600x600) e título.
+
+* **openglwindow.hpp / openglwindow.cpp**: Classe que define todos os comportamentos da tela opengl e dos objetos renderizados na tela, algumas de suas funções são:  
+*handleEvent:* Define o comportamento da camera para o teclado.  
+*loadModelFromFile:* Carrega o modelo obj de esferas que se encontra na pasta de assets.  
+*initializePlanetAttrib:* Popula o array de planetas e suas propriedades de cor e escala.  
+
+
+# <Projeto 1> Pac-Man Rain
 
 ## Links:
 
@@ -32,10 +76,3 @@ Em initializeGL(), carregamos as fontes que serão usadas nos textos e os shader
 
 * **pacmans.cpp / pacmans.hpp:** Implementa os comportamentos/atributos dos pacmans que caem do topo da tela, a classe gera os pacmans na posicao (aleatória, 1.5) de 3 em 3 segundos através da função generatePacmans().
 A geometria dos pacmans é gerada com 10 lados e utilizando GL_TRIANGLE_FAN.
-
-
-
-
-
-
-
