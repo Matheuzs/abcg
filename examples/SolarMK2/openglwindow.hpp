@@ -46,7 +46,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   // View Types
   std::vector<const char*> m_viewTypesTags{
-      "Basic", "Night Lights", "No Water", "Political", "Disco"};
+      "Basic", "Night Lights", "No Water", "Political"};
   std::vector<GLuint> m_viewTypes;
   int m_typeIndex{};
   std::string getViewType(int index);

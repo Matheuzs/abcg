@@ -98,15 +98,10 @@ void OpenGLWindow::initializeSkybox() {
 }
 
 void OpenGLWindow::loadModel(std::string_view path) {
-  if (m_model.specialMode) {
-    m_model.loadDiffuseTexture(getAssetsPath() + "maps/Disco.png");
-    m_model.loadNormalTexture(getAssetsPath() + "maps/DiscoNormal.png");
-  }
-  else {
-    std::string viewType = getViewType(m_typeIndex);
-    m_model.loadDiffuseTexture(getAssetsPath() + "maps/" + viewType + ".png");
-    m_model.loadNormalTexture(getAssetsPath() + "maps/EarthNormal.png");
-  }
+
+  std::string viewType = getViewType(m_typeIndex);
+  m_model.loadDiffuseTexture(getAssetsPath() + "maps/" + viewType + ".png");
+  m_model.loadNormalTexture(getAssetsPath() + "maps/EarthNormal.png");
   m_model.loadFromFile(path);
 
   m_model.setupVAO(m_programs.at(m_currentProgramIndex));
@@ -121,15 +116,9 @@ void OpenGLWindow::loadModel(std::string_view path) {
 }
 
 void OpenGLWindow::loadMoonModel(std::string_view path) {
-  if (m_model.specialMode) {
-    moon_model.loadDiffuseTexture(getAssetsPath() + "maps/Disco.png");
-    moon_model.loadNormalTexture(getAssetsPath() + "maps/DiscoNormal.png");
-  }
-  else {
-    std::string viewType = getViewType(m_typeIndex);
-    moon_model.loadDiffuseTexture(getAssetsPath() + "maps/Moon.png");
-    moon_model.loadNormalTexture(getAssetsPath() + "maps/MoonNormal.png");
-  }
+  std::string viewType = getViewType(m_typeIndex);
+  moon_model.loadDiffuseTexture(getAssetsPath() + "maps/Moon.png");
+  moon_model.loadNormalTexture(getAssetsPath() + "maps/MoonNormal.png");
  
   moon_model.loadFromFile(path, true, true);
   
@@ -258,9 +247,6 @@ std::string OpenGLWindow::getViewType(int index) {
       file = "EarthWoWater";
     else if (index == 3)
       file = "EarthPolitical";
-    else if (index == 4) {
-      file = "Disco";
-    }
     else
       return "Earth";
 
@@ -440,19 +426,11 @@ void OpenGLWindow::paintUI() {
       if (static_cast<int>(currentIndex) != m_typeIndex) {
         m_typeIndex = currentIndex;
         
-        if (m_typeIndex == 4) {
-          m_model.specialMode = true;
-          loadModel(getAssetsPath() + "Disco.obj");
-          loadMoonModel(getAssetsPath() + "Disco.obj");
-          m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-          //moon_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-        } else {
-          m_model.specialMode = false;
-          loadModel(getAssetsPath() + "Earth2K.obj");
-          loadMoonModel(getAssetsPath() + "Moon2K.obj");
-          m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-          //moon_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-        }
+        m_model.specialMode = false;
+        loadModel(getAssetsPath() + "Earth2K.obj");
+        loadMoonModel(getAssetsPath() + "Moon2K.obj");
+        m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
+        //moon_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
       }
     }
 
