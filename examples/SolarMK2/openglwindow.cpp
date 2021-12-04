@@ -140,10 +140,7 @@ void OpenGLWindow::paintGL() {
   glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 
   // Use currently selected program
-  if (m_model.specialMode)
-    m_currentProgramIndex = 7;
-  else
-    m_currentProgramIndex = 0;
+  m_currentProgramIndex = 0;
 
   const auto program{m_programs.at(m_currentProgramIndex)};
   glUseProgram(program);
@@ -426,7 +423,6 @@ void OpenGLWindow::paintUI() {
       if (static_cast<int>(currentIndex) != m_typeIndex) {
         m_typeIndex = currentIndex;
         
-        m_model.specialMode = false;
         loadModel(getAssetsPath() + "Earth2K.obj");
         loadMoonModel(getAssetsPath() + "Moon2K.obj");
         m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");

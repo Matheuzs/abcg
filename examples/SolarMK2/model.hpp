@@ -39,7 +39,6 @@ class Model {
   void setupVAO(GLuint program);
 
   void move();
-  bool specialMode{false};
 
   [[nodiscard]] int getNumTriangles() const {
     return static_cast<int>(m_indices.size()) / 3;
