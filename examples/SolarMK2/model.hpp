@@ -34,7 +34,7 @@ class Model {
   void loadComplementaryTexture(std::string_view path);
   void loadNormalTexture(std::string_view path);
   void loadCubeTexture(const std::string& path);
-  void loadFromFile(std::string_view path, bool standardize = true, bool isMoon = false);
+  void loadFromFile(std::string_view path, bool standardize = true);
   void render(int numTriangles = -1) const;
   void setupVAO(GLuint program);
 
@@ -77,7 +77,6 @@ class Model {
   void computeTangents();
   void createBuffers();
   void standardize();
-  void standardizeMoon();
 };
 
 #endif

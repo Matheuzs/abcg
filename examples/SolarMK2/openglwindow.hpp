@@ -21,9 +21,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   int m_viewportHeight{};
 
   Model m_model;
-  Model moon_model;
   int m_trianglesToDraw{};
-  int moon_trianglesToDraw{};
 
   TrackBall m_trackBallModel;
   TrackBall m_trackBallLight;
@@ -32,10 +30,6 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::mat4 m_modelMatrix{1.0f};
   glm::mat4 m_viewMatrix{1.0f};
   glm::mat4 m_projMatrix{1.0f};
-
-  glm::mat4 moon_modelMatrix{1.0f};
-  glm::mat4 moon_viewMatrix{1.0f};
-  glm::mat4 moon_projMatrix{1.0f};
 
   // Shaders
   std::vector<const char*> m_shaderNames{
@@ -64,16 +58,6 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::vec4 m_Kd;
   glm::vec4 m_Ks;
   float m_shininess{};
-
-  // Light and material properties
-  glm::vec4 moon_lightDir{1.0f, 0.0f, 0.0f, 0.0f};
-  glm::vec4 moon_Ia{1.0f};
-  glm::vec4 moon_Id{1.0f};
-  glm::vec4 moon_Is{0.25f};
-  glm::vec4 moon_Ka;
-  glm::vec4 moon_Kd;
-  glm::vec4 moon_Ks;
-  float moon_shininess{};
 
   // Skybox vertices
   const std::array<glm::vec3, 36>  m_skyPositions{
@@ -106,7 +90,6 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void renderSkybox();
   void terminateSkybox();
   void loadModel(std::string_view path);
-  void loadMoonModel(std::string_view path);
   void update();
 
 
