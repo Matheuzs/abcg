@@ -1,7 +1,7 @@
 #include "openglwindow.hpp"
 
-#include <imgui.h>
 #include <fmt/core.h>
+#include <imgui.h>
 
 #include <cppitertools/itertools.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -96,8 +96,7 @@ void OpenGLWindow::initializeSkybox() {
 }
 
 void OpenGLWindow::loadModel(std::string_view path) {
-
-  std::string viewType = getViewType(m_typeIndex);
+  std::string viewType = getPlanetTexture(m_typeIndex);
   m_model.loadDiffuseTexture(getAssetsPath() + "maps/" + viewType + ".png");
   m_model.loadNormalTexture(getAssetsPath() + "maps/EarthNormal.png");
   m_model.loadFromFile(path);
@@ -174,7 +173,7 @@ void OpenGLWindow::paintGL() {
   glUniform4fv(KsLoc, 1, &m_Ks.x);
 
   m_model.render(m_trianglesToDraw);
-  
+
   renderSkybox();
 }
 
@@ -207,184 +206,77 @@ void OpenGLWindow::renderSkybox() {
   glUseProgram(0);
 }
 
-std::string OpenGLWindow::getViewType(int index) {
-    std::string file;
-    if (index == 0)
-      file = "Earth";
-    else if (index == 1)
-      file = "EarthNight";
-    else if (index == 2)
-      file = "EarthWoWater";
-    else if (index == 3)
-      file = "EarthPolitical";
-    else
-      return "Earth";
+std::string OpenGLWindow::getPlanetTexture(int index) {
+  std::string file;
+  // if (index == 0)
+  //   file = "Earth";
+  // else if (index == 1)
+  //   file = "EarthNight";
+  // else if (index == 2)
+  //   file = "EarthWoWater";
+  // else if (index == 3)
+  //   file = "EarthPolitical";
+  // else
+  //   return "Earth";
 
-    return file;
+  return m_planets.at(index);
 }
 
 void OpenGLWindow::paintUI() {
   abcg::OpenGLWindow::paintUI();
 
-  // File browser for models
-  static ImGui::FileBrowser fileDialogModel;
-  fileDialogModel.SetTitle("Load 3D Model");
-  fileDialogModel.SetTypeFilters({".obj"});
-  fileDialogModel.SetWindowSize(m_viewportWidth * 0.8f,
-                                m_viewportHeight * 0.8f);
-
-  // File browser for textures
-  static ImGui::FileBrowser fileDialogDiffuseMap;
-  fileDialogDiffuseMap.SetTitle("Load Diffuse Map");
-  fileDialogDiffuseMap.SetTypeFilters({".jpg", ".png"});
-  fileDialogDiffuseMap.SetWindowSize(m_viewportWidth * 0.8f,
-                                     m_viewportHeight * 0.8f);
-
-  // File browser for normal maps
-  static ImGui::FileBrowser fileDialogNormalMap;
-  fileDialogNormalMap.SetTitle("Load Normal Map");
-  fileDialogNormalMap.SetTypeFilters({".jpg", ".png"});
-  fileDialogNormalMap.SetWindowSize(m_viewportWidth * 0.8f,
-                                    m_viewportHeight * 0.8f);
-
-// Only in WebGL
-#if defined(__EMSCRIPTEN__)
-  fileDialogModel.SetPwd(getAssetsPath());
-  fileDialogDiffuseMap.SetPwd(getAssetsPath() + "/maps");
-  fileDialogNormalMap.SetPwd(getAssetsPath() + "/maps");
-#endif
-
   // Create main window widget
   {
-    auto widgetSize{ImVec2(222, 170)};
+    auto widgetSize{ImVec2(222, 50)};
 
-    if (!m_model.isUVMapped()) {
-      // Add extra space for static text
-      widgetSize.y += 26;
-    }
+    // if (!m_model.isUVMapped()) {
+    //   // Add extra space for static text
+    //   widgetSize.y += 26;
+    // }
 
     ImGui::SetNextWindowPos(ImVec2(m_viewportWidth - widgetSize.x - 5, 5));
     ImGui::SetNextWindowSize(widgetSize);
-    auto flags{ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration};
-    ImGui::Begin("Widget window", nullptr, flags);
+    auto flags{ImGuiWindowFlags_NoDecoration};
+    ImGui::Begin("Planetas", nullptr, flags);
 
-    // Menu
-    {
-      bool loadModel{};
-      bool loadDiffMap{};
-      bool loadNormalMap{};
-      if (ImGui::BeginMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-          ImGui::MenuItem("Load 3D Model...", nullptr, &loadModel);
-          ImGui::MenuItem("Load Diffuse Map...", nullptr, &loadDiffMap);
-          ImGui::MenuItem("Load Normal Map...", nullptr, &loadNormalMap);
-          ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-      }
-      if (loadModel) fileDialogModel.Open();
-      if (loadDiffMap) fileDialogDiffuseMap.Open();
-      if (loadNormalMap) fileDialogNormalMap.Open();
-    }
+    // // CW/CCW combo box
+    // {
+    //   static std::size_t currentIndex{};
+    //   std::vector<std::string> comboItems{"CCW", "CW"};
 
-    static bool faceCulling{};
-    ImGui::Checkbox("Back-face culling", &faceCulling);
+    //   ImGui::PushItemWidth(120);
+    //   if (ImGui::BeginCombo("Front face",
+    //                         comboItems.at(currentIndex).c_str())) {
+    //     for (auto index : iter::range(comboItems.size())) {
+    //       const bool isSelected{currentIndex == index};
+    //       if (ImGui::Selectable(comboItems.at(index).c_str(), isSelected))
+    //         currentIndex = index;
+    //       if (isSelected) ImGui::SetItemDefaultFocus();
+    //     }
+    //     ImGui::EndCombo();
+    //   }
+    //   ImGui::PopItemWidth();
 
-    if (faceCulling) {
-      glEnable(GL_CULL_FACE);
-    } else {
-      glDisable(GL_CULL_FACE);
-    }
-
-    // CW/CCW combo box
-    {
-      static std::size_t currentIndex{};
-      std::vector<std::string> comboItems{"CCW", "CW"};
-
-      ImGui::PushItemWidth(120);
-      if (ImGui::BeginCombo("Front face",
-                            comboItems.at(currentIndex).c_str())) {
-        for (auto index : iter::range(comboItems.size())) {
-          const bool isSelected{currentIndex == index};
-          if (ImGui::Selectable(comboItems.at(index).c_str(), isSelected))
-            currentIndex = index;
-          if (isSelected) ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-      }
-      ImGui::PopItemWidth();
-
-      if (currentIndex == 0) {
+    //   if (currentIndex == 0) {
         glFrontFace(GL_CCW);
-      } else {
-        glFrontFace(GL_CW);
-      }
-    }
+    //   } else {
+    //     glFrontFace(GL_CW);
+    //   }
+    // }
 
-    // Projection combo box
-    {
-      static std::size_t currentIndex{};
-      std::vector<std::string> comboItems{"Perspective", "Orthographic"};
-
-      ImGui::PushItemWidth(120);
-      if (ImGui::BeginCombo("Projection",
-                            comboItems.at(currentIndex).c_str())) {
-        for (auto index : iter::range(comboItems.size())) {
-          const bool isSelected{currentIndex == index};
-          if (ImGui::Selectable(comboItems.at(index).c_str(), isSelected))
-            currentIndex = index;
-          if (isSelected) ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-      }
-      ImGui::PopItemWidth();
-
-      auto aspect{static_cast<float>(m_viewportWidth) /
-                  static_cast<float>(m_viewportHeight)};
-      if (currentIndex == 0) {
-        m_projMatrix =
-            glm::perspective(glm::radians(45.0f), aspect, 0.1f, 5.0f);
-
-      } else {
-        m_projMatrix =
-            glm::ortho(-1.0f * aspect, 1.0f * aspect, -1.0f, 1.0f, 0.1f, 5.0f);
-      }
-    }
-
-    if (!m_model.isUVMapped()) {
-      ImGui::TextColored(ImVec4(1, 1, 0, 1), "Mesh has no UV coords.");
-    }
-
-     // UV mapping box
-    {
-      std::vector<std::string> comboItems{"Triplanar", "Cylindrical",
-                                          "Spherical"};
-
-      if (m_model.isUVMapped()) comboItems.emplace_back("From mesh");
-
-      ImGui::PushItemWidth(120);
-      if (ImGui::BeginCombo("UV mapping",
-                            comboItems.at(m_mappingMode).c_str())) {
-        for (auto index : iter::range(comboItems.size())) {
-          const bool isSelected{m_mappingMode == static_cast<int>(index)};
-          if (ImGui::Selectable(comboItems.at(index).c_str(), isSelected))
-            m_mappingMode = index;
-          if (isSelected) ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-      }
-      ImGui::PopItemWidth();
-    }
+    auto aspect{static_cast<float>(m_viewportWidth) /
+                static_cast<float>(m_viewportHeight)};
+    m_projMatrix = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
 
     // View Type combo box
     {
       static std::size_t currentIndex{};
 
       ImGui::PushItemWidth(120);
-      if (ImGui::BeginCombo("View Type", m_viewTypesTags.at(currentIndex))) {
-        for (auto index : iter::range(m_viewTypesTags.size())) {
+      if (ImGui::BeginCombo("Planetas", m_planets.at(currentIndex))) {
+        for (auto index : iter::range(m_planets.size())) {
           const bool isSelected{currentIndex == index};
-          if (ImGui::Selectable(m_viewTypesTags.at(index), isSelected))
+          if (ImGui::Selectable(m_planets.at(index), isSelected))
             currentIndex = index;
           if (isSelected) ImGui::SetItemDefaultFocus();
         }
@@ -395,34 +287,13 @@ void OpenGLWindow::paintUI() {
       // Set up VAO if shader program has changed
       if (static_cast<int>(currentIndex) != m_typeIndex) {
         m_typeIndex = currentIndex;
-        
+
         loadModel(getAssetsPath() + "Earth2K.obj");
         m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
       }
     }
-
+    // m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
     ImGui::End();
-  }
-
-  fileDialogModel.Display();
-  if (fileDialogModel.HasSelected()) {
-    loadModel(fileDialogModel.GetSelected().string());
-    fileDialogModel.ClearSelected();
-
-    // Define Mapping Mode como esférico
-    m_mappingMode = 2;
-  }
-
-  fileDialogDiffuseMap.Display();
-  if (fileDialogDiffuseMap.HasSelected()) {
-    m_model.loadDiffuseTexture(fileDialogDiffuseMap.GetSelected().string());
-    fileDialogDiffuseMap.ClearSelected();
-  }
-
-  fileDialogNormalMap.Display();
-  if (fileDialogNormalMap.HasSelected()) {
-    m_model.loadNormalTexture(fileDialogNormalMap.GetSelected().string());
-    fileDialogNormalMap.ClearSelected();
   }
 }
 
