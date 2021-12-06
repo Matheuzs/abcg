@@ -54,6 +54,7 @@ void OpenGLWindow::initializeGL() {
   loadModel(getAssetsPath() + "Earth2K.obj");
   m_mappingMode = 2;
   m_typeIndex = 0;
+  m_earthIndex = 0;
 
   // Load cubemap
   m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
@@ -97,8 +98,22 @@ void OpenGLWindow::initializeSkybox() {
 
 void OpenGLWindow::loadModel(std::string_view path) {
   std::string viewType = getPlanetTexture(m_typeIndex);
-  m_model.loadDiffuseTexture(getAssetsPath() + "maps/" + viewType + ".png");
-  m_model.loadNormalTexture(getAssetsPath() + "maps/EarthNormal.png");
+  std::string earthTexture = getEarthTexture(m_earthIndex);
+
+  std::string terraText = "Terra";
+  if(!viewType.compare(terraText)) {
+    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + earthTexture + ".png");
+  } else {
+    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + viewType + ".png");
+  }
+  
+
+  if (!viewType.compare(terraText)) {
+    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + viewType + "Normal.png");
+  } else {
+    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/CleanNormalMap.png");
+  }
+
   m_model.loadFromFile(path);
 
   m_model.setupVAO(m_programs.at(m_currentProgramIndex));
@@ -208,18 +223,12 @@ void OpenGLWindow::renderSkybox() {
 
 std::string OpenGLWindow::getPlanetTexture(int index) {
   std::string file;
-  // if (index == 0)
-  //   file = "Earth";
-  // else if (index == 1)
-  //   file = "EarthNight";
-  // else if (index == 2)
-  //   file = "EarthWoWater";
-  // else if (index == 3)
-  //   file = "EarthPolitical";
-  // else
-  //   return "Earth";
-
   return m_planets.at(index);
+}
+
+std::string OpenGLWindow::getEarthTexture(int index) {
+  std::string file;
+  return m_earthVariants.at(index);
 }
 
 void OpenGLWindow::paintUI() {
@@ -227,12 +236,7 @@ void OpenGLWindow::paintUI() {
 
   // Create main window widget
   {
-    auto widgetSize{ImVec2(222, 50)};
-
-    // if (!m_model.isUVMapped()) {
-    //   // Add extra space for static text
-    //   widgetSize.y += 26;
-    // }
+    auto widgetSize{ImVec2(222, 70)};
 
     ImGui::SetNextWindowPos(ImVec2(m_viewportWidth - widgetSize.x - 5, 5));
     ImGui::SetNextWindowSize(widgetSize);
@@ -283,6 +287,30 @@ void OpenGLWindow::paintUI() {
         ImGui::EndCombo();
       }
       ImGui::PopItemWidth();
+
+      if (!strcmp(m_planets.at(currentIndex), "Terra")) {
+        // Add extra space for static text
+
+        static std::size_t currentIndexEarth{};
+        ImGui::PushItemWidth(120);
+        if (ImGui::BeginCombo("Variantes", m_earthVariants.at(currentIndexEarth))) {
+          for (auto index : iter::range(m_earthVariants.size())) {
+            const bool isSelected{currentIndexEarth == index};
+            if (ImGui::Selectable(m_earthVariants.at(index), isSelected))
+              currentIndexEarth = index;
+            if (isSelected) ImGui::SetItemDefaultFocus();
+          }
+          ImGui::EndCombo();
+        }
+        ImGui::PopItemWidth();
+
+        if (static_cast<int>(currentIndexEarth) != m_earthIndex) {
+          m_earthIndex = currentIndexEarth;
+
+          loadModel(getAssetsPath() + "Earth2K.obj");
+          m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
+        }
+      }
 
       // Set up VAO if shader program has changed
       if (static_cast<int>(currentIndex) != m_typeIndex) {

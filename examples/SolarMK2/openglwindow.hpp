@@ -38,13 +38,20 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   std::vector<GLuint> m_programs;
   int m_currentProgramIndex{};
 
-  // View Types
+  // Planets
   std::vector<const char*> m_planets {
       "Sol", "Mercurio", "Venus", "Terra", "Lua", "Marte", "Jupiter",
       "Saturno", "Urano", "Netuno", "Ceres", "Haumea", "Makemake", "Eris"};
   std::vector<GLuint> m_viewTypes;
   int m_typeIndex{};
   std::string getPlanetTexture(int index);
+
+  // Planets
+  std::vector<const char*> m_earthVariants {
+      "Default", "Politico", "Noturno", "NoWater"};
+  // std::vector<GLuint> m_viewTypes;
+  int m_earthIndex{};
+  std::string getEarthTexture(int index);
 
   // Mapping mode
   // 0: triplanar; 1: cylindrical; 2: spherical; 3: from mesh
