@@ -236,7 +236,7 @@ void OpenGLWindow::paintUI() {
 
   // Create main window widget
   {
-    auto widgetSize{ImVec2(222, 70)};
+    auto widgetSize{ImVec2(210, 65)};
 
     ImGui::SetNextWindowPos(ImVec2(m_viewportWidth - widgetSize.x - 5, 5));
     ImGui::SetNextWindowSize(widgetSize);
@@ -272,10 +272,10 @@ void OpenGLWindow::paintUI() {
                 static_cast<float>(m_viewportHeight)};
     m_projMatrix = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
 
+    static std::size_t currentIndex{};
+    static std::size_t currentIndexEarth{};
     // View Type combo box
     {
-      static std::size_t currentIndex{};
-
       ImGui::PushItemWidth(120);
       if (ImGui::BeginCombo("Planetas", m_planets.at(currentIndex))) {
         for (auto index : iter::range(m_planets.size())) {
@@ -291,7 +291,7 @@ void OpenGLWindow::paintUI() {
       if (!strcmp(m_planets.at(currentIndex), "Terra")) {
         // Add extra space for static text
 
-        static std::size_t currentIndexEarth{};
+        
         ImGui::PushItemWidth(120);
         if (ImGui::BeginCombo("Variantes", m_earthVariants.at(currentIndexEarth))) {
           for (auto index : iter::range(m_earthVariants.size())) {
@@ -321,6 +321,36 @@ void OpenGLWindow::paintUI() {
       }
     }
     // m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
+
+    // Sliders
+    if(strcmp(m_planets.at(currentIndex), "Sol")) {
+      auto widgetSize2{ImVec2(220, 85)};
+      auto flags2{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar};
+
+      ImGui::SetNextWindowPos(ImVec2(5, 5));
+      ImGui::SetNextWindowSize(widgetSize2);
+      ImGui::Begin("Light Direction", nullptr, flags2);
+
+      ImGui::PushItemWidth(50);
+      ImGui::DragFloat("X", &m_lightDir.x, 0.01f, -1.0f, 1.0f, "%.2f");
+      ImGui::SameLine();
+      ImGui::DragFloat("Y", &m_lightDir.y, 0.01f, -1.0f, 1.0f, "%.2f");
+      ImGui::SameLine();
+      ImGui::DragFloat("Z", &m_lightDir.z, 0.01f, -1.0f, 1.0f, "%.2f");
+
+      ImGui::DragFloat("Alpha", &m_lightDir.a, 0.01f, -1.0f, 1.0f, "%.2f");
+      ImGui::PopItemWidth();
+      // ImGui::SliderFloat("Light X", &m_lightDir.x, -1.0f, 1.0f, "%.0f degrees");
+      // ImGui::SliderFloat("Light Y", &m_lightDir.y, -1.0f, 1.0f, "%.0f degrees");
+      // ImGui::SliderFloat("Light Z", &m_lightDir.z, -1.0f, 1.0f, "%.0f degrees");
+      // ImGui::SliderFloat("Light A", &m_lightDir.a, -1.0f, 1.0f, "%.0f degrees");
+
+      ImGui::End();
+    } else {
+        m_lightDir = {0.0f, 0.0f, -1.0f, 1.0f};
+    }
+
+
     ImGui::End();
   }
 }

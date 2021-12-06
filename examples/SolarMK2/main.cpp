@@ -8,9 +8,16 @@ int main(int argc, char **argv) {
     abcg::Application app(argc, argv);
 
     auto window{std::make_unique<OpenGLWindow>()};
-    window->setOpenGLSettings({.samples = 0, .vsync = true});
-    window->setWindowSettings(
-        {.width = 600, .height = 600, .title = "SolarMK2"});
+    window->setOpenGLSettings({
+      .samples = 0, 
+      .vsync = true
+    });
+    window->setWindowSettings({
+      .width = 600, 
+      .height = 600,
+      .showFPS = false, 
+      .title = "SolarMK2"
+    });
 
     app.run(std::move(window));
   } catch (const abcg::Exception &exception) {
