@@ -12,15 +12,15 @@
 
 // Custom specialization of std::hash injected in namespace std
 namespace std {
-template <>
-struct hash<Vertex> {
-  size_t operator()(Vertex const& vertex) const noexcept {
-    std::size_t h1{std::hash<glm::vec3>()(vertex.position)};
-    std::size_t h2{std::hash<glm::vec3>()(vertex.normal)};
-    std::size_t h3{std::hash<glm::vec2>()(vertex.texCoord)};
-    return h1 ^ h2 ^ h3;
-  }
-};
+  template <>
+  struct hash<Vertex> {
+    size_t operator()(Vertex const& vertex) const noexcept {
+      std::size_t h1{std::hash<glm::vec3>()(vertex.position)};
+      std::size_t h2{std::hash<glm::vec3>()(vertex.normal)};
+      std::size_t h3{std::hash<glm::vec2>()(vertex.texCoord)};
+      return h1 ^ h2 ^ h3;
+    }
+  };
 }  // namespace std
 
 Model::~Model() {
@@ -173,10 +173,10 @@ void Model::loadCubeTexture(const std::string& path) {
 
   glDeleteTextures(1, &m_cubeTexture);
 
-  m_cubeTexture = abcg::opengl::loadCubemap(
-      {path + "px.png", path + "nx.png", path + "py.png",
-      path + "ny.png", path + "pz.png", path + "nz.png"});
-
+  m_cubeTexture = abcg::opengl::loadCubemap({
+    path + "px.png", path + "nx.png", path + "py.png",
+    path + "ny.png", path + "pz.png", path + "nz.png"
+  });
 }
 
 void Model::loadFromFile(std::string_view path, bool standardize) {
