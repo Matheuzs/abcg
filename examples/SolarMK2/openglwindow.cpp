@@ -51,7 +51,7 @@ void OpenGLWindow::initializeGL() {
   }
 
   // Load default model
-  loadModel(getAssetsPath() + "Earth2K.obj");
+  loadModel(getAssetsPath() + "Planet.obj");
   m_mappingMode = 2;
   m_typeIndex = 0;
   m_earthIndex = 0;
@@ -111,7 +111,7 @@ void OpenGLWindow::loadModel(std::string_view path) {
   
 
   if (!viewType.compare(terraText)) {
-    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + viewType + "Normal.png");
+    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + viewType + "NormalMap.png");
   } else {
     m_model.loadNormalTexture(getAssetsPath() + "maps/normals/CleanNormalMap.png");
   }
@@ -314,7 +314,7 @@ void OpenGLWindow::paintUI() {
         if (static_cast<int>(currentIndexEarth) != m_earthIndex) {
           m_earthIndex = currentIndexEarth;
 
-          loadModel(getAssetsPath() + "Earth2K.obj");
+          loadModel(getAssetsPath() + "Planet.obj");
           m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
         }
       }
@@ -323,7 +323,7 @@ void OpenGLWindow::paintUI() {
       if (static_cast<int>(currentIndex) != m_typeIndex) {
         m_typeIndex = currentIndex;
 
-        loadModel(getAssetsPath() + "Earth2K.obj");
+        loadModel(getAssetsPath() + "Planet.obj");
         m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
       }
     }
