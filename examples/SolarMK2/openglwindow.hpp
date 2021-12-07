@@ -95,6 +95,8 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   GLuint m_skyVBO{};
   GLuint m_skyProgram{};
 
+  abcg::ElapsedTimer m_timer;
+
   void initializeSkybox();
   void renderSkybox();
   void terminateSkybox();

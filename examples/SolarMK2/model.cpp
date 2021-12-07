@@ -26,6 +26,7 @@ struct hash<Vertex> {
 Model::~Model() {
   glDeleteTextures(1, &m_normalTexture);
   glDeleteTextures(1, &m_diffuseTexture);
+  glDeleteTextures(1, &m_complementaryTexture);
   glDeleteBuffers(1, &m_EBO);
   glDeleteBuffers(1, &m_VBO);
   glDeleteVertexArrays(1, &m_VAO);
@@ -151,6 +152,13 @@ void Model::loadDiffuseTexture(std::string_view path) {
 
   glDeleteTextures(1, &m_diffuseTexture);
   m_diffuseTexture = abcg::opengl::loadTexture(path);
+}
+
+void Model::loadComplementaryTexture(std::string_view path) {
+  if (!std::filesystem::exists(path)) return;
+
+  glDeleteTextures(1, &m_complementaryTexture);
+  m_complementaryTexture = abcg::opengl::loadTexture(path);
 }
 
 void Model::loadNormalTexture(std::string_view path) {
@@ -307,6 +315,9 @@ void Model::render(int numTriangles) const {
 
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubeTexture);
+
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, m_complementaryTexture);
 
   // Set minification and magnification parameters
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

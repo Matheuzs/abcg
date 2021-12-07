@@ -103,8 +103,10 @@ void OpenGLWindow::loadModel(std::string_view path) {
   std::string terraText = "Terra";
   if(!viewType.compare(terraText)) {
     m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + earthTexture + ".png");
+    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/Clouds.png");
   } else {
     m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + viewType + ".png");
+    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/None.png");
   }
   
 
@@ -129,6 +131,7 @@ void OpenGLWindow::loadModel(std::string_view path) {
 
 void OpenGLWindow::paintGL() {
   update();
+  float timer = m_timer.elapsed();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, m_viewportWidth, m_viewportHeight);
@@ -153,10 +156,12 @@ void OpenGLWindow::paintGL() {
   GLint KdLoc{glGetUniformLocation(program, "Kd")};
   GLint KsLoc{glGetUniformLocation(program, "Ks")};
   GLint diffuseTexLoc{glGetUniformLocation(program, "diffuseTex")};
+  GLint complementaryTexLoc{glGetUniformLocation(program, "complementaryTex")};
   GLint normalTexLoc{glGetUniformLocation(program, "normalTex")};
   GLint cubeTexLoc{glGetUniformLocation(program, "cubeTex")};
   GLint mappingModeLoc{glGetUniformLocation(program, "mappingMode")};
   GLint texMatrixLoc{glGetUniformLocation(program, "texMatrix")};
+  GLint timeLoc{glGetUniformLocation(program, "timer")};
 
   // Set uniform variables used by every scene object
   glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_viewMatrix[0][0]);
@@ -164,7 +169,9 @@ void OpenGLWindow::paintGL() {
   glUniform1i(diffuseTexLoc, 0);
   glUniform1i(normalTexLoc, 1);
   glUniform1i(cubeTexLoc, 2);
+  glUniform1i(complementaryTexLoc, 3);
   glUniform1i(mappingModeLoc, m_mappingMode);
+  glUniform1f(timeLoc, timer);
 
   glm::mat3 texMatrix{m_trackBallLight.getRotation()};
   glUniformMatrix3fv(texMatrixLoc, 1, GL_TRUE, &texMatrix[0][0]);
