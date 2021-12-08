@@ -16,8 +16,11 @@ Henrique Jotten Mendonca de Souza, **RA:** 11045812
 Entre algumas das funcionalidade está a de poder mover a camera no espaço através o mouse como trackball, alem disso, cada planeta pode ter o direcionamento da iluminação ajustado e suas informações técnicas são apresentadas em uma janela separada. No caso do planeta terra, ainda é possivel ver diferentes representações geográficas.
 
 ## Detalhes de Uso:
-
-
+* Canto inferior esquerdo - Botão para modo tela cheia.
+* Canto superior esquerdo - Input para ajuste da posição da fonte de luz, com exceção do Sol.
+* Canto superior direito - Seleção do objeto do sistema solar a ser analisado, no caso da terra existe. ainda a seleção extra de visão geográfica. 
+* Canto inferior esquerdo - Informações do corpo celeste selecionado.
+* Para girar a visão do corpo celeste basta segurar o botão esquerdo do mouse e arrastar.
 
 ## Detalhamento do Código:
 
