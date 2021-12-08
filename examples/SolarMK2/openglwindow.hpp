@@ -32,9 +32,9 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::mat4 m_projMatrix{1.0f};
 
   // Shaders
-  std::vector<const char*> m_shaderNames{
-      "normalmapping", "texture", "blinnphong", "phong",
-      "gouraud",       "normal",  "depth", "cubereflect"};
+  std::vector<const char*> m_shaderNames {
+      "normalmapping", "texture"
+  };
   std::vector<GLuint> m_programs;
   int m_currentProgramIndex{};
 
