@@ -36,15 +36,15 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   std::vector<GLuint> m_programs;
   int m_currentProgramIndex{};
 
-  int m_planetIndex{};
+  int m_planetIndex{3};
   std::string getPlanetTexture(int index);
 
-  int m_earthIndex{};
+  int m_earthIndex{0};
   std::string getEarthTexture(int index);
 
   // Light and material properties
-  glm::vec4 m_lightDir{0.0f, 0.0f, -1.0f, 1.0f};
-  // glm::vec4 m_lightDir{-1.0f, -1.0f, 1.0f, 1.0f};
+  // glm::vec4 m_lightDir{0.0f, 0.0f, -1.0f, 1.0f};
+  glm::vec4 m_lightDir{-1.0f, -1.0f, 1.0f, 1.0f};
   glm::vec4 m_Ia{1.0f};
   glm::vec4 m_Id{1.0f};
   glm::vec4 m_Is{0.25f};

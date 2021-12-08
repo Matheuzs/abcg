@@ -48,12 +48,12 @@ void OpenGLWindow::initializeGL() {
     m_programs.push_back(program);
   }
 
+  // Initial Planet (Earth)
+  // m_planetIndex = 3;
+  // // Initial Default Earth
+  // m_earthIndex = 0;
   // Load default model
   loadModel(getAssetsPath() + "Planet.obj");
-  // Initial Planet (Earth)
-  m_planetIndex = 0;
-  // Initial Default Earth
-  m_earthIndex = 0;
 
   // Load cubemap
   m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
@@ -244,8 +244,8 @@ void OpenGLWindow::paintUI() {
 
   // Widgets Windows
   {
-    static std::size_t currentIndex{};
-    static std::size_t currentIndexEarth{};
+    static std::size_t currentIndex{3};
+    static std::size_t currentIndexEarth{0};
     ImVec2 widgetSize{};
 
     if(currentIndex == 3) {
