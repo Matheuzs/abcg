@@ -98,6 +98,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   void terminateSkybox();
   void loadModel(std::string_view path);
   void update();
+  void HelpMarker(const char* label, const char* desc);
 };
 
 #endif

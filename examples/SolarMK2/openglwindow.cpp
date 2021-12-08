@@ -243,7 +243,15 @@ void OpenGLWindow::paintUI() {
 
   // Widgets Windows
   {
-    auto widgetSize{ImVec2(210, 65)};
+    static std::size_t currentIndex{};
+    static std::size_t currentIndexEarth{};
+    ImVec2 widgetSize{};
+
+    if(currentIndex == 3) {
+      widgetSize = {ImVec2(210, 85)};
+    } else {
+      widgetSize = {ImVec2(210, 65)};
+    }
 
     ImGui::SetNextWindowPos(ImVec2(m_viewportWidth - widgetSize.x - 5, 5));
     ImGui::SetNextWindowSize(widgetSize);
@@ -256,8 +264,7 @@ void OpenGLWindow::paintUI() {
     m_projMatrix = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
 
     // Planets and Earth textures ComboBox
-    static std::size_t currentIndex{};
-    static std::size_t currentIndexEarth{};
+
     {
       ImGui::PushItemWidth(120);
       // Planets Options ComboBox 
@@ -274,6 +281,7 @@ void OpenGLWindow::paintUI() {
 
       // Earth Variants Textures ComboBox 
       if (!strcmp(m_planetNames.at(currentIndex), "Terra")) {
+
         // ImGui::PushItemWidth(120);
         if (ImGui::BeginCombo("Variantes", m_earthTextures.at(currentIndexEarth))) {
           for (auto index : iter::range(m_earthTextures.size())) {
@@ -298,6 +306,10 @@ void OpenGLWindow::paintUI() {
           loadEarthTextures();
         }
       }
+
+      HelpMarker("Mais Informações (?)", "Lorem Ipsum");
+
+      ImGui::End();
     }
 
     // Light Direction Sliders, Except Sun
@@ -318,14 +330,13 @@ void OpenGLWindow::paintUI() {
 
       ImGui::DragFloat("Alpha", &m_lightDir.a, 0.01f, -1.0f, 1.0f, "%.2f");
       ImGui::PopItemWidth();
-
+      ImGui::SameLine(0, 40);
+      HelpMarker(
+        "Ajuda (?)", "Mova os sliders entre os valores -1 e 1 para alterar a direção da Luz incidente no Planeta nos eixos XYZ.");
       ImGui::End();
     } else {
         m_lightDir = {0.0f, 0.0f, -1.0f, 1.0f};
     }
-
-
-    ImGui::End();
   }
 }
 
@@ -355,4 +366,16 @@ void OpenGLWindow::update() {
   m_viewMatrix =
       glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f + m_zoom),
                   glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void OpenGLWindow::HelpMarker(const char* label, const char* desc) {
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), label);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
 }
