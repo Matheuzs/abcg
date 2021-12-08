@@ -46,16 +46,12 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   int m_typeIndex{};
   std::string getPlanetTexture(int index);
 
-  // Planets
-  std::vector<const char*> m_earthVariants {
+  // Earth Variants
+  std::vector<const char*> m_earthTextures {
       "Default", "Politico", "Noturno", "NoWater"};
   // std::vector<GLuint> m_viewTypes;
   int m_earthIndex{};
   std::string getEarthTexture(int index);
-
-  // Mapping mode
-  // 0: triplanar; 1: cylindrical; 2: spherical; 3: from mesh
-  int m_mappingMode{};
 
   // Light and material properties
   glm::vec4 m_lightDir{0.0f, 0.0f, -1.0f, 1.0f};
@@ -67,6 +63,9 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::vec4 m_Kd;
   glm::vec4 m_Ks;
   float m_shininess{};
+
+  // Timer used to Clouds rotation
+  abcg::ElapsedTimer m_timer;
 
   // Skybox vertices
   const std::array<glm::vec3, 36>  m_skyPositions{
@@ -95,15 +94,11 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   GLuint m_skyVBO{};
   GLuint m_skyProgram{};
 
-  abcg::ElapsedTimer m_timer;
-
   void initializeSkybox();
   void renderSkybox();
   void terminateSkybox();
   void loadModel(std::string_view path);
   void update();
-
-
 };
 
 #endif

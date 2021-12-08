@@ -50,14 +50,13 @@ void OpenGLWindow::initializeGL() {
 
   // Load default model
   loadModel(getAssetsPath() + "Planet.obj");
-  m_mappingMode = 2;
   m_typeIndex = 0;
   m_earthIndex = 0;
 
   // Load cubemap
   m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
 
-  // Define o ângulo de rotação para se assemelhar à rotação da Terra
+  // Sets the angle and velocity of rotation
   m_trackBallModel.setAxis(glm::normalize(glm::vec3(-0.1, 1, 0.05)));
   m_trackBallModel.setVelocity(0.0001f);
 
@@ -98,8 +97,8 @@ void OpenGLWindow::loadModel(std::string_view path) {
   std::string viewType = getPlanetTexture(m_typeIndex);
   std::string earthTexture = getEarthTexture(m_earthIndex);
 
-  std::string terraText = "Terra";
-  if(!viewType.compare(terraText)) {
+  // Load Diffuse and Complementary Textures
+  if(!viewType.compare("Terra")) {
     m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + earthTexture + ".png");
     m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/Clouds.png");
   } else {
@@ -107,15 +106,14 @@ void OpenGLWindow::loadModel(std::string_view path) {
     m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/None.png");
   }
   
-
-  if (!viewType.compare(terraText)) {
+  // Load Normal Maps
+  if (!viewType.compare("Terra")) {
     m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + viewType + "NormalMap.png");
   } else {
     m_model.loadNormalTexture(getAssetsPath() + "maps/normals/CleanNormalMap.png");
   }
 
   m_model.loadFromFile(path);
-
   m_model.setupVAO(m_programs.at(m_currentProgramIndex));
 
   m_trianglesToDraw = m_model.getNumTriangles();
@@ -129,6 +127,8 @@ void OpenGLWindow::loadModel(std::string_view path) {
 
 void OpenGLWindow::paintGL() {
   update();
+
+  // Compute time elapsed to use on Clouds velocity
   float timer = m_timer.elapsed();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -157,7 +157,6 @@ void OpenGLWindow::paintGL() {
   GLint complementaryTexLoc{glGetUniformLocation(program, "complementaryTex")};
   GLint normalTexLoc{glGetUniformLocation(program, "normalTex")};
   GLint cubeTexLoc{glGetUniformLocation(program, "cubeTex")};
-  GLint mappingModeLoc{glGetUniformLocation(program, "mappingMode")};
   GLint texMatrixLoc{glGetUniformLocation(program, "texMatrix")};
   GLint timeLoc{glGetUniformLocation(program, "timer")};
 
@@ -168,7 +167,6 @@ void OpenGLWindow::paintGL() {
   glUniform1i(normalTexLoc, 1);
   glUniform1i(cubeTexLoc, 2);
   glUniform1i(complementaryTexLoc, 3);
-  glUniform1i(mappingModeLoc, m_mappingMode);
   glUniform1f(timeLoc, timer);
 
   glm::mat3 texMatrix{m_trackBallLight.getRotation()};
@@ -233,13 +231,13 @@ std::string OpenGLWindow::getPlanetTexture(int index) {
 
 std::string OpenGLWindow::getEarthTexture(int index) {
   std::string file;
-  return m_earthVariants.at(index);
+  return m_earthTextures.at(index);
 }
 
 void OpenGLWindow::paintUI() {
   abcg::OpenGLWindow::paintUI();
 
-  // Create main window widget
+  // Widgets Windows
   {
     auto widgetSize{ImVec2(210, 65)};
 
@@ -248,40 +246,17 @@ void OpenGLWindow::paintUI() {
     auto flags{ImGuiWindowFlags_NoDecoration};
     ImGui::Begin("Planetas", nullptr, flags);
 
-    // // CW/CCW combo box
-    // {
-    //   static std::size_t currentIndex{};
-    //   std::vector<std::string> comboItems{"CCW", "CW"};
-
-    //   ImGui::PushItemWidth(120);
-    //   if (ImGui::BeginCombo("Front face",
-    //                         comboItems.at(currentIndex).c_str())) {
-    //     for (auto index : iter::range(comboItems.size())) {
-    //       const bool isSelected{currentIndex == index};
-    //       if (ImGui::Selectable(comboItems.at(index).c_str(), isSelected))
-    //         currentIndex = index;
-    //       if (isSelected) ImGui::SetItemDefaultFocus();
-    //     }
-    //     ImGui::EndCombo();
-    //   }
-    //   ImGui::PopItemWidth();
-
-    //   if (currentIndex == 0) {
-        glFrontFace(GL_CCW);
-    //   } else {
-    //     glFrontFace(GL_CW);
-    //   }
-    // }
-
+    glFrontFace(GL_CCW);
     auto aspect{static_cast<float>(m_viewportWidth) /
                 static_cast<float>(m_viewportHeight)};
     m_projMatrix = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
 
+    // Planets and Earth textures ComboBox
     static std::size_t currentIndex{};
     static std::size_t currentIndexEarth{};
-    // View Type combo box
     {
       ImGui::PushItemWidth(120);
+      // Planets Options ComboBox 
       if (ImGui::BeginCombo("Planetas", m_planets.at(currentIndex))) {
         for (auto index : iter::range(m_planets.size())) {
           const bool isSelected{currentIndex == index};
@@ -291,43 +266,38 @@ void OpenGLWindow::paintUI() {
         }
         ImGui::EndCombo();
       }
-      ImGui::PopItemWidth();
+      // ImGui::PopItemWidth();
 
+      // Earth Variants Textures ComboBox 
       if (!strcmp(m_planets.at(currentIndex), "Terra")) {
-        // Add extra space for static text
-
-        
-        ImGui::PushItemWidth(120);
-        if (ImGui::BeginCombo("Variantes", m_earthVariants.at(currentIndexEarth))) {
-          for (auto index : iter::range(m_earthVariants.size())) {
+        // ImGui::PushItemWidth(120);
+        if (ImGui::BeginCombo("Variantes", m_earthTextures.at(currentIndexEarth))) {
+          for (auto index : iter::range(m_earthTextures.size())) {
             const bool isSelected{currentIndexEarth == index};
-            if (ImGui::Selectable(m_earthVariants.at(index), isSelected))
+            if (ImGui::Selectable(m_earthTextures.at(index), isSelected))
               currentIndexEarth = index;
             if (isSelected) ImGui::SetItemDefaultFocus();
           }
           ImGui::EndCombo();
         }
         ImGui::PopItemWidth();
-
-        if (static_cast<int>(currentIndexEarth) != m_earthIndex) {
-          m_earthIndex = currentIndexEarth;
-
-          loadModel(getAssetsPath() + "Planet.obj");
-          m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-        }
       }
 
       // Set up VAO if shader program has changed
       if (static_cast<int>(currentIndex) != m_typeIndex) {
         m_typeIndex = currentIndex;
+        loadModel(getAssetsPath() + "Planet.obj");
+        m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
+      }
 
+      if (static_cast<int>(currentIndexEarth) != m_earthIndex) {
+        m_earthIndex = currentIndexEarth;
         loadModel(getAssetsPath() + "Planet.obj");
         m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
       }
     }
-    // m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
 
-    // Sliders
+    // Light Direction Sliders, Except Sun
     if(strcmp(m_planets.at(currentIndex), "Sol")) {
       auto widgetSize2{ImVec2(220, 85)};
       auto flags2{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar};
@@ -345,10 +315,6 @@ void OpenGLWindow::paintUI() {
 
       ImGui::DragFloat("Alpha", &m_lightDir.a, 0.01f, -1.0f, 1.0f, "%.2f");
       ImGui::PopItemWidth();
-      // ImGui::SliderFloat("Light X", &m_lightDir.x, -1.0f, 1.0f, "%.0f degrees");
-      // ImGui::SliderFloat("Light Y", &m_lightDir.y, -1.0f, 1.0f, "%.0f degrees");
-      // ImGui::SliderFloat("Light Z", &m_lightDir.z, -1.0f, 1.0f, "%.0f degrees");
-      // ImGui::SliderFloat("Light A", &m_lightDir.a, -1.0f, 1.0f, "%.0f degrees");
 
       ImGui::End();
     } else {
