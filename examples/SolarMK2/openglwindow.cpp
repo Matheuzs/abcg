@@ -33,7 +33,6 @@ void OpenGLWindow::handleEvent(SDL_Event& event) {
 
   if (event.type == SDL_MOUSEWHEEL) {
     m_zoom += (event.wheel.y > 0 ? 1.0f : -1.0f) / 5.0f;
-    // m_zoom = glm::clamp(m_zoom, -1.5f, 1.0f);
   }
 }
 
@@ -50,7 +49,9 @@ void OpenGLWindow::initializeGL() {
 
   // Load default model
   loadModel(getAssetsPath() + "Planet.obj");
-  m_typeIndex = 0;
+  // Sun
+  m_planetIndex = 0;
+  // Default Earth
   m_earthIndex = 0;
 
   // Load cubemap
@@ -94,23 +95,14 @@ void OpenGLWindow::initializeSkybox() {
 }
 
 void OpenGLWindow::loadModel(std::string_view path) {
-  std::string viewType = getPlanetTexture(m_typeIndex);
+  std::string viewType = getPlanetTexture(m_planetIndex);
   std::string earthTexture = getEarthTexture(m_earthIndex);
 
-  // Load Diffuse and Complementary Textures
-  if(!viewType.compare("Terra")) {
-    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + earthTexture + ".png");
-    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/Clouds.png");
+  // Load Diffuse and Complementary Textures, else load Earth Textures
+  if (m_planetIndex != 3) {
+    loadPlanetsTextures();
   } else {
-    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + viewType + ".png");
-    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/None.png");
-  }
-  
-  // Load Normal Maps
-  if (!viewType.compare("Terra")) {
-    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + viewType + "NormalMap.png");
-  } else {
-    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/CleanNormalMap.png");
+    loadEarthTextures();
   }
 
   m_model.loadFromFile(path);
@@ -226,12 +218,24 @@ void OpenGLWindow::renderSkybox() {
 
 std::string OpenGLWindow::getPlanetTexture(int index) {
   std::string file;
-  return m_planets.at(index);
+  return m_planetNames.at(index);
 }
 
 std::string OpenGLWindow::getEarthTexture(int index) {
   std::string file;
   return m_earthTextures.at(index);
+}
+
+void OpenGLWindow::loadPlanetsTextures() {
+    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + getPlanetTexture(m_planetIndex) + ".png");
+    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/None.png");
+    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/CleanNormalMap.png");
+}
+
+void OpenGLWindow::loadEarthTextures() {
+    m_model.loadDiffuseTexture(getAssetsPath() + "maps/textures/" + getEarthTexture(m_earthIndex) + ".png");
+    m_model.loadComplementaryTexture(getAssetsPath() + "maps/textures/Clouds.png");
+    m_model.loadNormalTexture(getAssetsPath() + "maps/normals/" + getPlanetTexture(m_planetIndex) + "NormalMap.png");
 }
 
 void OpenGLWindow::paintUI() {
@@ -257,10 +261,10 @@ void OpenGLWindow::paintUI() {
     {
       ImGui::PushItemWidth(120);
       // Planets Options ComboBox 
-      if (ImGui::BeginCombo("Planetas", m_planets.at(currentIndex))) {
-        for (auto index : iter::range(m_planets.size())) {
+      if (ImGui::BeginCombo("Planetas", m_planetNames.at(currentIndex))) {
+        for (auto index : iter::range(m_planetNames.size())) {
           const bool isSelected{currentIndex == index};
-          if (ImGui::Selectable(m_planets.at(index), isSelected))
+          if (ImGui::Selectable(m_planetNames.at(index), isSelected))
             currentIndex = index;
           if (isSelected) ImGui::SetItemDefaultFocus();
         }
@@ -269,7 +273,7 @@ void OpenGLWindow::paintUI() {
       // ImGui::PopItemWidth();
 
       // Earth Variants Textures ComboBox 
-      if (!strcmp(m_planets.at(currentIndex), "Terra")) {
+      if (!strcmp(m_planetNames.at(currentIndex), "Terra")) {
         // ImGui::PushItemWidth(120);
         if (ImGui::BeginCombo("Variantes", m_earthTextures.at(currentIndexEarth))) {
           for (auto index : iter::range(m_earthTextures.size())) {
@@ -284,21 +288,20 @@ void OpenGLWindow::paintUI() {
       }
 
       // Set up VAO if shader program has changed
-      if (static_cast<int>(currentIndex) != m_typeIndex) {
-        m_typeIndex = currentIndex;
-        loadModel(getAssetsPath() + "Planet.obj");
-        m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
-      }
-
-      if (static_cast<int>(currentIndexEarth) != m_earthIndex) {
+      if (static_cast<int>(currentIndex) != m_planetIndex || static_cast<int>(currentIndexEarth) != m_earthIndex) {
+        m_planetIndex = currentIndex;
         m_earthIndex = currentIndexEarth;
-        loadModel(getAssetsPath() + "Planet.obj");
-        m_model.loadCubeTexture(getAssetsPath() + "maps/cube/");
+        if (currentIndex != 3) {
+          loadPlanetsTextures();
+        }
+        else {
+          loadEarthTextures();
+        }
       }
     }
 
     // Light Direction Sliders, Except Sun
-    if(strcmp(m_planets.at(currentIndex), "Sol")) {
+    if(strcmp(m_planetNames.at(currentIndex), "Sol")) {
       auto widgetSize2{ImVec2(220, 85)};
       auto flags2{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar};
 

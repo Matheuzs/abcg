@@ -39,23 +39,20 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   int m_currentProgramIndex{};
 
   // Planets
-  std::vector<const char*> m_planets {
+  std::vector<const char*> m_planetNames {
       "Sol", "Mercurio", "Venus", "Terra", "Lua", "Marte", "Jupiter",
       "Saturno", "Urano", "Netuno", "Ceres", "Haumea", "Makemake", "Eris"};
-  std::vector<GLuint> m_viewTypes;
-  int m_typeIndex{};
+  int m_planetIndex{};
   std::string getPlanetTexture(int index);
 
   // Earth Variants
   std::vector<const char*> m_earthTextures {
       "Default", "Politico", "Noturno", "NoWater"};
-  // std::vector<GLuint> m_viewTypes;
   int m_earthIndex{};
   std::string getEarthTexture(int index);
 
   // Light and material properties
   glm::vec4 m_lightDir{0.0f, 0.0f, -1.0f, 1.0f};
-  // glm::vec4 m_lightDir{1.0f, 1.0f, -1.0f, 0.0f};
   glm::vec4 m_Ia{1.0f};
   glm::vec4 m_Id{1.0f};
   glm::vec4 m_Is{0.25f};
@@ -96,6 +93,8 @@ class OpenGLWindow : public abcg::OpenGLWindow {
 
   void initializeSkybox();
   void renderSkybox();
+  void loadPlanetsTextures();
+  void loadEarthTextures();
   void terminateSkybox();
   void loadModel(std::string_view path);
   void update();
