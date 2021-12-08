@@ -6,6 +6,7 @@
 #include <cppitertools/itertools.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
+
 void OpenGLWindow::handleEvent(SDL_Event& event) {
   glm::ivec2 mousePosition;
   SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
@@ -41,7 +42,7 @@ void OpenGLWindow::initializeGL() {
   glEnable(GL_DEPTH_TEST);
 
   // Create programs
-  for (const auto& name : m_shaderNames) {
+  for (const auto& name : m_constants.m_shaderNames) {
     auto path{getAssetsPath() + "shaders/" + name};
     auto program{createProgramFromFile(path + ".vert", path + ".frag")};
     m_programs.push_back(program);
@@ -49,9 +50,9 @@ void OpenGLWindow::initializeGL() {
 
   // Load default model
   loadModel(getAssetsPath() + "Planet.obj");
-  // Sun
+  // Initial Planet (Earth)
   m_planetIndex = 0;
-  // Default Earth
+  // Initial Default Earth
   m_earthIndex = 0;
 
   // Load cubemap
@@ -218,12 +219,12 @@ void OpenGLWindow::renderSkybox() {
 
 std::string OpenGLWindow::getPlanetTexture(int index) {
   std::string file;
-  return m_planetNames.at(index);
+  return m_constants.m_planetNames.at(index);
 }
 
 std::string OpenGLWindow::getEarthTexture(int index) {
   std::string file;
-  return m_earthTextures.at(index);
+  return m_constants.m_earthTextures.at(index);
 }
 
 void OpenGLWindow::loadPlanetsTextures() {
@@ -268,10 +269,10 @@ void OpenGLWindow::paintUI() {
     {
       ImGui::PushItemWidth(120);
       // Planets Options ComboBox 
-      if (ImGui::BeginCombo("Planetas", m_planetNames.at(currentIndex))) {
-        for (auto index : iter::range(m_planetNames.size())) {
+      if (ImGui::BeginCombo("Planetas", m_constants.m_planetNames.at(currentIndex))) {
+        for (auto index : iter::range(m_constants.m_planetNames.size())) {
           const bool isSelected{currentIndex == index};
-          if (ImGui::Selectable(m_planetNames.at(index), isSelected))
+          if (ImGui::Selectable(m_constants.m_planetNames.at(index), isSelected))
             currentIndex = index;
           if (isSelected) ImGui::SetItemDefaultFocus();
         }
@@ -280,13 +281,13 @@ void OpenGLWindow::paintUI() {
       // ImGui::PopItemWidth();
 
       // Earth Variants Textures ComboBox 
-      if (!strcmp(m_planetNames.at(currentIndex), "Terra")) {
+      if (!strcmp(m_constants.m_planetNames.at(currentIndex), "Terra")) {
 
         // ImGui::PushItemWidth(120);
-        if (ImGui::BeginCombo("Variantes", m_earthTextures.at(currentIndexEarth))) {
-          for (auto index : iter::range(m_earthTextures.size())) {
+        if (ImGui::BeginCombo("Variantes", m_constants.m_earthTextures.at(currentIndexEarth))) {
+          for (auto index : iter::range(m_constants.m_earthTextures.size())) {
             const bool isSelected{currentIndexEarth == index};
-            if (ImGui::Selectable(m_earthTextures.at(index), isSelected))
+            if (ImGui::Selectable(m_constants.m_earthTextures.at(index), isSelected))
               currentIndexEarth = index;
             if (isSelected) ImGui::SetItemDefaultFocus();
           }
@@ -307,13 +308,13 @@ void OpenGLWindow::paintUI() {
         }
       }
 
-      HelpMarker("Mais Informações (?)", "Lorem Ipsum");
+      HelpMarker(m_constants.lbMarkInfo, m_constants.descMarkPlanets[currentIndex]);
 
       ImGui::End();
     }
 
     // Light Direction Sliders, Except Sun
-    if(strcmp(m_planetNames.at(currentIndex), "Sol")) {
+    if(strcmp(m_constants.m_planetNames.at(currentIndex), "Sol")) {
       auto widgetSize2{ImVec2(220, 85)};
       auto flags2{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar};
 
@@ -330,12 +331,13 @@ void OpenGLWindow::paintUI() {
 
       ImGui::DragFloat("Alpha", &m_lightDir.a, 0.01f, -1.0f, 1.0f, "%.2f");
       ImGui::PopItemWidth();
+
       ImGui::SameLine(0, 40);
-      HelpMarker(
-        "Ajuda (?)", "Mova os sliders entre os valores -1 e 1 para alterar a direção da Luz incidente no Planeta nos eixos XYZ.");
+      HelpMarker(m_constants.lbMarkLight, m_constants.descMarkLight);
+
       ImGui::End();
     } else {
-        m_lightDir = {0.0f, 0.0f, -1.0f, 1.0f};
+        m_lightDir = m_constants.sunLightDir;
     }
   }
 }
@@ -369,7 +371,7 @@ void OpenGLWindow::update() {
 }
 
 void OpenGLWindow::HelpMarker(const char* label, const char* desc) {
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), label);
+    ImGui::TextColored(m_constants.yellow, label);
     if (ImGui::IsItemHovered())
     {
         ImGui::BeginTooltip();

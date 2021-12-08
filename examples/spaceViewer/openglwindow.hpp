@@ -3,6 +3,7 @@
 
 #include <string_view>
 
+#include "constants.hpp"
 #include "abcg.hpp"
 #include "model.hpp"
 #include "trackball.hpp"
@@ -20,6 +21,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   int m_viewportWidth{};
   int m_viewportHeight{};
 
+  Constants m_constants;
   Model m_model;
   int m_trianglesToDraw{};
 
@@ -31,28 +33,18 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   glm::mat4 m_viewMatrix{1.0f};
   glm::mat4 m_projMatrix{1.0f};
 
-  // Shaders
-  std::vector<const char*> m_shaderNames {
-      "normalmapping", "texture"
-  };
   std::vector<GLuint> m_programs;
   int m_currentProgramIndex{};
 
-  // Planets
-  std::vector<const char*> m_planetNames {
-      "Sol", "Mercurio", "Venus", "Terra", "Lua", "Marte", "Jupiter",
-      "Saturno", "Urano", "Netuno", "Ceres", "Haumea", "Makemake", "Eris"};
   int m_planetIndex{};
   std::string getPlanetTexture(int index);
 
-  // Earth Variants
-  std::vector<const char*> m_earthTextures {
-      "Default", "Politico", "Noturno", "NoWater"};
   int m_earthIndex{};
   std::string getEarthTexture(int index);
 
   // Light and material properties
   glm::vec4 m_lightDir{0.0f, 0.0f, -1.0f, 1.0f};
+  // glm::vec4 m_lightDir{-1.0f, -1.0f, 1.0f, 1.0f};
   glm::vec4 m_Ia{1.0f};
   glm::vec4 m_Id{1.0f};
   glm::vec4 m_Is{0.25f};

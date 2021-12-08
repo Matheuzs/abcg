@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
       .width = 600, 
       .height = 600,
       .showFPS = false, 
-      .title = "SolarMK2"
+      .title = "Space Viewer"
     });
 
     app.run(std::move(window));
