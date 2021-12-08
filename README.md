@@ -3,16 +3,16 @@
 Matheus Augusto Correa de Oliveira, **RA:** 11201721710\
 Henrique Jotten Mendonca de Souza, **RA:** 11045812
 
-# <Projeto 3> SolarMK2
+# <Projeto 3> Space Viewer
 
 ## Links:
 
 [Código GitHub](https://github.com/Matheuzs/abcg)  
-[GitHub Pages](https://matheuzs.github.io/abcg/SolarMK2/)
+[GitHub Pages](https://matheuzs.github.io/abcg/spaceViewer/)
 
 ## Descrição do Projeto:
 
-*SolarMK2* é um projeto 3D baseado no nosso projeto anterior(Solar System), esse programa tem como objetivo simular os planetas do sistema solar de forma individual e unica.
+*Space Viewer* é um projeto 3D baseado no nosso projeto anterior(Solar System), esse programa tem como objetivo simular os planetas do sistema solar de forma individual e unica.
 Entre algumas das funcionalidade está a de poder mover a camera no espaço através o mouse como trackball, alem disso, cada planeta pode ter o direcionamento da iluminação ajustado e suas informações técnicas são apresentadas em uma janela separada. No caso do planeta terra, ainda é possivel ver diferentes representações geográficas.
 
 ## Detalhes de Uso:
