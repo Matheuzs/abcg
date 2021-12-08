@@ -371,7 +371,7 @@ void OpenGLWindow::update() {
 }
 
 void OpenGLWindow::HelpMarker(const char* label, const char* desc) {
-    ImGui::TextColored(m_constants.yellow, label);
+    ImGui::TextColored(m_constants.yellow, "%s", label);
     if (ImGui::IsItemHovered())
     {
         ImGui::BeginTooltip();
