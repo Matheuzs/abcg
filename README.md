@@ -15,6 +15,8 @@ Henrique Jotten Mendonca de Souza, **RA:** 11045812
 *Space Viewer* é um projeto 3D onde implementamos uma evolução do nosso projeto anterior (Solar System) e utilizamos referencias do projeto viewer6, esse programa tem como objetivo simular os planetas e satélites do sistema solar de forma individual e unica.
 Entre algumas das funcionalidade está a de poder rotacionar o planeta e dar zoom in/out, alem disso, cada planeta (exceto o Sol) pode ter o direcionamento da iluminação ajustado e todos os planetas/satélites possuem um help marker com breve descrição a seu respeito. No caso do planeta terra, ainda é possivel ver diferentes representações geográficas.
 
+![alt text](https://github.com/Matheuzs/abcg/blob/master/images/spaceViewer.png?raw=true)
+
 ## Detalhes de Uso:
 * Canto inferior esquerdo - Botão para modo tela cheia.
 * Canto superior esquerdo - Input para ajuste da posição da fonte de luz, com exceção do Sol.
