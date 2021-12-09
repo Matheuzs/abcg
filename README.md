@@ -12,21 +12,27 @@ Henrique Jotten Mendonca de Souza, **RA:** 11045812
 
 ## Descrição do Projeto:
 
-*Space Viewer* é um projeto 3D onde implementamos uma evolução do nosso projeto anterior (Solar System) e utilizamos referencias do projeto viewer6, esse programa tem como objetivo simular os planetas e satélites do sistema solar de forma individual e unica.
-Entre algumas das funcionalidade está a de poder rotacionar o planeta e dar zoom in/out, alem disso, cada planeta (exceto o Sol) pode ter o direcionamento da iluminação ajustado e todos os planetas/satélites possuem um help marker com breve descrição a seu respeito. No caso do planeta terra, ainda é possivel ver diferentes representações geográficas.
+*Space Viewer* é um projeto 3D onde implementamos uma evolução do nosso projeto anterior (Solar System) e utilizamos referencias do projeto viewer6, esse programa tem como objetivo simular os planetas e satélites do sistema solar de forma individual e única.
+Entre algumas das funcionalidade está a de poder rotacionar o planeta e dar zoom in/out, alem disso, cada planeta (exceto o Sol) pode ter o direcionamento da iluminação ajustado e todos os planetas/satélites possuem um help marker com breve descrição a seu respeito. No caso do planeta terra, possue textura complementar com as nuvens rotacionando em volta e é possivel ver diferentes representações geográficas.
 
 ![alt text](https://github.com/Matheuzs/abcg/blob/master/images/spaceViewer.png?raw=true)
 
 ## Detalhes de Uso:
 * Canto inferior esquerdo - Botão para modo tela cheia.
-* Canto superior esquerdo - Input para ajuste da posição da fonte de luz, com exceção do Sol.
+* Canto superior esquerdo - Sliders para direcionar a direção da fonte de luz nos eixos X, Y e Z, com exceção do Sol.
 * Canto superior direito - Seleção do objeto do sistema solar a ser analisado, caso seja selecionado a Terra é habilitado outro combo box onde é possível alterar entre representações geográficas. 
 * Canto superior direito - Informações do corpo celeste selecionado.
 * Para girar a visão do corpo celeste basta segurar o botão esquerdo do mouse e arrastar.
+* Com o scroll do mouse é possível alterar o zoom do planeta.
+* Lista de Planetas/Satélites disponíveis:  
+{"Sol", "Mercurio", "Venus", "Terra", "Lua", "Marte", "Jupiter", "Saturno", "Urano", "Netuno", "Ceres", "Haumea", "Makemake", "Eris"}
+* Mapas geográficos da Terra disponíveis:  
+{"Default", "Politico", "Noturno", "NoWater"}
+
 
 ## Detalhamento do Código:
 
-* **Assets/**: Pasta onde está centralizado os shaders, mapas de textura e modelos. Possuímos os shaders de mapeamento das texturas normais, shader e mapas de textura da skybox e o shader para as texturas dos planetas/satélites;
+* **Assets/**: Pasta onde está centralizado os shaders, mapas de textura e modelos. Possuímos os shaders de mapeamento das texturas normais, shader e mapa de textura da skybox e o shader para as texturas dos planetas/satélites. O planeta terra também possui a textura de nuvens;
 
 * **constants.hpp**: Classe auxiliar que centraliza algumas das constantes do projeto para fins de organização, principalmente as Strings utilizadas nas descrições dos planetas;
 
@@ -34,7 +40,8 @@ Entre algumas das funcionalidade está a de poder rotacionar o planeta e dar zoo
 
 * **model.hpp / model.cpp**: Classe auxiliar que reune as funções relativas ao carregamento de texturas, normais e modelos, aqui também está a implementação para renderização dos modelo utilizado no projeto;
 
-* **openglwindow.hpp / openglwindow.cpp**: Classe que define todos os comportamentos da tela opengl e dos objetos renderizados na tela, algumas de suas funções são:  
+* **openglwindow.hpp / openglwindow.cpp**: Classe que define todos os comportamentos da tela opengl e dos objetos renderizados na tela, algumas de suas funções são:\
+\
 *handleEvent:* Implementa o tracking dos botões do Mouse;\
 \
 *initializeSkybox:* Função responsável por carregar os shaders e textura para o skybox, através dela iniciamos o VAO e VBO da textura de fundo da aplicação;\
@@ -46,6 +53,7 @@ Entre algumas das funcionalidade está a de poder rotacionar o planeta e dar zoo
 *getPlanetTexture:* Função que devolve qual o nome (String) do arquivo de textura que deve ser utilizada nos planetas;\
 \
 *getEarthTexture:* Função que devolve qual o nome (String) do arquivo de textura que deve ser utilizada para as texturas do Planeta Terra (Variantes);\
+\
 *loadPlanetsTextures:* Responsável por carregar a textura do planeta escolhido quando o mesmo é alterado na combobox;\
 \
 *loadEarthTextures:* Responsável por carregar as texturas variantes do planeta terra quando o mesmo está selecionado no combo box;\
@@ -55,6 +63,7 @@ A segunda window (habilitada apenas se o Sol nao está selecionado) temos os sli
 \
 *HelpMarker:* Função para criarmos help markers com em uma window, onde passamos por parametro descrição e label.
 
+* **trackball.hpp / trackball.cpp**: Classe que implementa os comportamento da camera com o Mouse.
 
 # <Projeto 2> Solar System
 
